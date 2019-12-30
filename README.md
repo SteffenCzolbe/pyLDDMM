@@ -32,7 +32,7 @@ Two example images are provided. A circle translation, and morphing a circle to 
 
 The examples can be executed with:
 ```
-python3 translation_example.py
-python3 circle_to_square_expample.py
+python3 -m examples.translation_example
+python3 -m examples.circle_to_square_expample
 ```
 Output files are written into the directory `example_images`.
