@@ -8,7 +8,7 @@ class LDDMM2D(object):
     2d LDDMM registration
     """
 
-    def register(self, I0, I1, T=32, K=200, sigma=1, alpha=1, gamma = 1, epsilon=0.01):
+    def register(self, I0, I1, T=32, K=200, sigma=1, alpha=1, gamma=1, epsilon=0.01):
         """
         registers two images, I0 and I1
         @param I0: image, ndarray of dimension H x W x n
@@ -60,6 +60,9 @@ class LDDMM2D(object):
 
             # (8): Calculate Jacobian determinant of the transformation
             detPhi1 = self.jacobian_derterminant(Phi1)
+            if self.is_injectivity_violated(detPhi1):
+                print("Injectivity violated. Stopping. Try lowering the learning rate (epsilon).")
+                break
 
             # (9): Calculate the gradient
             for t in range(0, self.T):
@@ -73,12 +76,13 @@ class LDDMM2D(object):
                 break
 
             # (11): calculate new energy
-            E = np.sum([np.linalg.norm(self.regularizer.L(v[t])) for t in range(T)]) \
-                + 1 / sigma**2 * np.sum((J0[-1] - I1)**2)
+            E_regularizer = np.sum([np.linalg.norm(self.regularizer.L(v[t])) for t in range(T)])
+            E_intensity = 1 / sigma**2 * np.sum((J0[-1] - I1)**2)
+            E = E_regularizer + E_intensity
             energies.append(E)
 
             # (12): iterate k = k+1
-            print("iteration {:3d}, energy {:4.2f}".format(k, E))
+            print("iteration {:3d}, energy {:4.2f}, thereof {:4.2f} regularization and {:4.2f} intensity difference".format(k, E, E_regularizer, E_intensity))
             # end of for loop block
 
         # (13): Denote the final velocity field as \hat{v}
@@ -224,10 +228,15 @@ class LDDMM2D(object):
             # calculate determinants
             detPhi1[t] = dx[:, :, 0] * dy[:, :, 1] - dx[:, :, 1] * dy[:, :, 0]
 
-        # check injectivity: a function has a differentiable inverse iff the determinant of it's jacobian is positive
-        assert detPhi1.min() > 0, "Injectivity violated. Stopping. Try lowering the learning rate (epsilon)."
-
         return detPhi1
+
+    def is_injectivity_violated(self, detPhi1):
+        """
+        check injectivity: a function has a differentiable inverse iff the determinant of it's jacobian is positive
+        @param detPhi1: sequence of determinants of J0
+        @return: bool
+        """
+        return detPhi1.min() < 0
 
 
 
