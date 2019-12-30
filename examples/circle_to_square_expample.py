@@ -8,7 +8,6 @@ if __name__ == "__main__":
 
     # perform the registration
     lddmm = pyLDDMM.LDDMM2D()
-    #im, v, energies, length, Phi0, Phi1, J0, J1 = lddmm.register(i0, i1, sigma=0.1, alpha=1, epsilon=0.0001, K=15)
     im, v, energies, length, Phi0, Phi1, J0, J1 = lddmm.register(i0, i1, sigma=0.1, alpha=1, epsilon=0.0001, K=20)
 
     # save i0 aligned to i1

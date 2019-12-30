@@ -8,7 +8,7 @@ if __name__ == "__main__":
 
     # perform the registration
     lddmm = pyLDDMM.LDDMM2D()
-    im, v, energies, length, Phi0, Phi1, J0, J1 = lddmm.register(i0, i1, sigma=0.1, alpha=1000, epsilon=0.01, K=15)
+    im, v, energies, length, Phi0, Phi1, J0, J1 = lddmm.register(i0, i1, sigma=0.1, alpha=1000, gamma=1, epsilon=0.01, K=15)
 
     # save i0 aligned to i1
     saveimg('./example_images/out_translation.png', im)
