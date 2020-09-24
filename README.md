@@ -36,3 +36,8 @@ python3 -m examples.translation_example
 python3 -m examples.circle_to_square_expample
 ```
 Output files are written into the directory `example_images`.
+
+## Documentation
+The algorithm is explained in the original [paper](ComputingLargeDeformationMetricMappingsviaGeodesicFlowsofDiffeomorphisms.pdf).
+An additional (less mathematical, more algorithmical) description is given in the additional [documentation PDF](LDDMMnotes.pdf).
+The commented code is in the file [pyLDDMM/LDDMM.py](pyLDDMM/LDDMM.py). 
